@@ -40,3 +40,18 @@ for(i in unique(mayors$TwitterHandle)) {
   mayors$policementions[mayors$TwitterHandle == i] <- policecount
   mayors$blmmentions[mayors$TwitterHandle == i] <- blmcount
 }
+
+#make the plot
+police.data <- mayors[mayors$policementions !=0, ]
+police.data <- police.data[order (police.data$policementions, decreasing = TRUE), ]
+blm.data <- mayors[mayors$blmmentions !=0, ]
+blm.data <- blm.data[order (blm.data$blmmentions, decreasing = TRUE), ]
+ggplot(data=police.data[1:25,])+
+  scale_shape_manual(values = 1:25)+
+  geom_point(mapping = aes(x=LastName, y=policementions,  color=LastName), alpha=.8)
+
+ggplot(data=blm.data[1:22,])+
+  scale_shape_manual(values = 1:22)+
+  geom_point(mapping = aes(x=LastName, y=blmmentions,  color=LastName), alpha=.8)
+
+
