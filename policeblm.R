@@ -73,19 +73,20 @@ sum(mayors$blmmentions)     # 50 is much less than we expected. Maybe mayors ref
 
 ####  Let's prepare the plots:
 
-
-
-
 police.data <- mayors[mayors$policementions !=0, ]
 police.data <- police.data[order (police.data$policementions, decreasing = TRUE), ]
 blm.data <- mayors[mayors$blmmentions !=0, ]
 blm.data <- blm.data[order (blm.data$blmmentions, decreasing = TRUE), ]
+
+#  Also add urban population size:
+
 plot <- ggplot(data=police.data[1:25,])+
   scale_shape_manual(values = 1:25)+
-  geom_point(mapping = aes(x=LastName, y=policementions,  color="red"), alpha=.8)+
-  geom_point(data=blm.data[1:22,],mapping=aes(x=LastName,y=blmmentions,color="blue"),alpha=.8)+
+  geom_point(mapping = aes(x=LastName, y=policementions,  color="red", size = Population), alpha=.8)+
+  geom_point(data=blm.data[1:22,],mapping=aes(x=LastName,y=blmmentions,color="blue", size = Population),alpha=.8)+
   labs(y="Twitter Mentions",x="Mayors")
-  
+plot
+
 #ggplot(data=blm.data[1:22,])+
 #  scale_shape_manual(values = 1:22)+
 #  geom_point(mapping = aes(x=LastName, y=blmmentions,  color="blue"), alpha=.8)
