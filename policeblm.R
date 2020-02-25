@@ -66,7 +66,7 @@ for(i in unique(mayors$TwitterHandle)) {
 
 sum(mayors$policementions)  # 12482 is great result
 sum(mayors$blmmentions)     # 50 is much less than we expected. Maybe mayors refrain from using #blm.
-
+summary(mayors$blmmentions)
 
 
 
@@ -83,8 +83,8 @@ blm.data <- blm.data[order (blm.data$blmmentions, decreasing = TRUE), ]
 plot <- ggplot(data=police.data[1:25,])+
   scale_shape_manual(values = 1:25)+
   geom_point(mapping = aes(x=LastName, y=policementions,  color="red", size = Population), alpha=.8)+
-  geom_point(data=blm.data[1:22,],mapping=aes(x=LastName,y=blmmentions,color="blue", size = Population),alpha=.8)+
-  labs(y="Twitter Mentions",x="Mayors")
+  geom_point(data=blm.data[1:22,],mapping=aes(x=LastName,y=blmmentions,color="blue", size = Population), alpha=.8)+
+  labs(y="Twitter Mentions: Police",x="Mayors")
 plot
 
 #ggplot(data=blm.data[1:22,])+
