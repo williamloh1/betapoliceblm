@@ -23,7 +23,7 @@ str_view(tweets$Text, "\\sjuly\\s13\\s", match=TRUE)  # Not a good one
 str_view(tweets$Text, "brutality", match=TRUE)  # Not a good one
 str_view(tweets$Text, "\\#blacklivesmatter", match=TRUE)  # OK
 str_view(tweets$Text, "\\#georgezimmerman", match=TRUE)  # Not a good one
-str_view(tweets$Text, "\\#ferguson$", match=TRUE)  # Good one!
+str_view(tweets$Text, "\\#ferguson", match=TRUE)  # Good one!
 str_view(tweets$Text,"\\#michaelbrown", match=TRUE)  # Not a good one
 str_view(tweets$Text,"\\#blacklivesmatter", match=TRUE)  # Not a good one
 str_view(tweets$Text,"\\#icantbreathe", match=TRUE)  # Not a good one
@@ -51,7 +51,7 @@ for(i in unique(mayors$TwitterHandle)) {
     if(str_detect(j," cop ")==TRUE | str_detect(j," cops ")==TRUE |  str_detect(j,"police")==TRUE | str_detect(j,"detective")==TRUE) {
       policecount <- policecount + 1
     }
-    if(str_detect(j,"blacklivesmatter")==TRUE | str_detect(j, "\\#ferguson$") == TRUE | str_detect(j,"\\#blm")==TRUE | str_detect(j,"\\#jonathansanders")==TRUE) {
+    if(str_detect(j,"blacklivesmatter")==TRUE | str_detect(j, "\\#ferguson") == TRUE | str_detect(j,"\\#blm")==TRUE | str_detect(j,"\\#jonathansanders")==TRUE) {
       blmcount <- blmcount + 1
     }
   }
