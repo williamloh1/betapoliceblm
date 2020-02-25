@@ -4,5 +4,12 @@ VSG.inst <-VSG %>%
 for(i in seq_along(VSG.inst)){
   VSG.inst[,i]= na_if(VSG.inst[[i]],VSG.inst[[i]]>4)
 }
-map(VSG.inst, mean, na.rm = TRUE)
-map(VSG.inst, median, na.rm = TRUE)
+mean.inst <- map(VSG.inst, mean, na.rm = TRUE)
+median.inst <-map(VSG.inst, median, na.rm = TRUE)
+mean.inst <- sort(mean.inst[[]], decreasing = TRUE)
+mean.inst <- mean.inst[order(sapply(mean.inst,'[[',1))]
+median.inst <- median.inst[order(sapply(median.inst,'[[',1))]
+mean.plot <- plot(1:length(mean.inst),mean.inst,pch=18, col="blue",xlab="Institutions",ylab="Mean Trust")
+mean.plot <- text(1:length(mean.inst),mean.inst,names(mean.inst),cex=0.5, col="red")
+median.plot <- plot(1:length(median.inst),median.inst,pch=18, col="blue",xlab="Institutions",ylab="Median Trust")
+median.plot <- text(1:length(median.inst),median.inst,names(median.inst),cex=0.5, col="red")
