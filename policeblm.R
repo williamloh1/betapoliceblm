@@ -1,39 +1,57 @@
+####  Getting Ready
+
+rm(list = ls())
 mayors<-read_csv(file="https://raw.githubusercontent.com/jmontgomery/jmontgomery.github.io/master/PDS/Datasets/Mayors.csv")
-tweets<-read_csv("~/Downloads/Tweets.csv")
+tweets<-read_csv("G:/My Drive/_WashU_courses/2020_Spring/Coding/Tweets.csv/Tweets.csv")
 tweets <- rename(tweets, TwitterHandle=ScreenName)
 
-#look at lyda krewson first
+
+
+
+####  Given the enormous size of tweets dataset, let's do our exploration on mayor Krewson:
+
 krewson <- subset(tweets, TwitterHandle=="lydakrewson")
 krewsonwords<-str_split(krewson$Text, pattern=" ")
 unlistkrewson <- unlist(krewsonwords)
-policewords <- c()
-blmwords <- c("BLM","blacklivesmatter")
-str_view(tweets$Text,"\\#michaelbrown",match=TRUE)
-str_view(tweets$Text,"Police",match=TRUE)
-str_view(tweets$Text," cop ",match=TRUE)
-str_view(tweets$Text," cops ",match=TRUE)
-str_detect(tweets$Text," detective ")
-krewsontweets <- krewson$Text
-krewsontweets <- krewsontweets %>%
-  filter(str_detect(krewson$Text," detective ")==TRUE) %>%
-  mutate(policewords=1)
-sum(str_count(krewsontweets," cop "))
+policewords <- c(" cop ", "police", "detective")  # Potential words for the cop and police part. 
+blmwords <- c("blm","blacklivesmatter")     # Potential words for the black lives matter part.
+krewsonwords <- str_to_lower(krewsonwords)  # Given that regex is case-letters, let's make all lower case.
+tweets$Text <- str_to_lower(tweets$Text)  # Same for all dataset!
+str_view(tweets$Text, "\\#michaelbrown", match=TRUE)  # No solutions
+str_view(tweets$Text,"\\#racism",match=TRUE)  # Not a good one
+str_view(tweets$Text, "\\sjuly\\s13\\s", match=TRUE)  # Not a good one
+str_view(tweets$Text, "brutality", match=TRUE)  # Not a good one
+str_view(tweets$Text, "\\#blacklivesmatter", match=TRUE)  # OK
+str_view(tweets$Text, "\\#georgezimmerman", match=TRUE)  # Not a good one
+str_view(tweets$Text, "\\#ferguson$", match=TRUE)  # Good one!
+str_view(tweets$Text,"\\#michaelbrown", match=TRUE)  # Not a good one
+str_view(tweets$Text,"\\#blacklivesmatter", match=TRUE)  # Not a good one
+str_view(tweets$Text,"\\#icantbreathe", match=TRUE)  # Not a good one
+str_view(tweets$Text,"\\#jonathansanders", match=TRUE)  # OK
+str_view(tweets$Text,"\\#blacktwitter", match=TRUE)  # Not a good one
+str_view(tweets$Text,"police", match=TRUE)  # OK
+str_view(tweets$Text," cop ", match=TRUE)  # OK
+str_view(tweets$Text," cops ", match=TRUE)  # OK
+str_view(tweets$Text," detective ", match=TRUE)  # OK
 
 
-mayors <- subset(mayors,TwitterHandle!=NaN)
-tweets$Text <- str_to_lower(tweets$Text)
+
+
+####  Let's write a function take takes these words and counts them by mayor:
+
+mayors <- subset(mayors, TwitterHandle!=NaN)
 policementions <- rep(0,nrow(mayors))
 blmmentions <- rep(0,nrow(mayors))
-cbind(mayors,policementions,blmmentions)
+mayors <- cbind(mayors,policementions,blmmentions)
 for(i in unique(mayors$TwitterHandle)) {
   mayortweets <- subset(tweets, TwitterHandle == i)
   policecount <- 0
   blmcount <- 0
   for(j in mayortweets$Text) {
-    if(str_detect(j," cop ")==TRUE | str_detect(j,"police")==TRUE | str_detect(j,"detective")==TRUE) {
+    if(str_detect(j," cop ")==TRUE | str_detect(j," cops ")==TRUE |  str_detect(j,"police")==TRUE | str_detect(j,"detective")==TRUE) {
       policecount <- policecount + 1
     }
-    if(str_detect(j,"blacklivesmatter")==TRUE | str_detect(j,"\\#racism")==TRUE | str_detect(j,"\\#blm")==TRUE) {
+    if(str_detect(j,"blacklivesmatter")==TRUE | str_detect(j, "\\#ferguson$") == TRUE | str_detect(j,"\\#blm")==TRUE | str_detect(j,"\\#jonathansanders")==TRUE) {
       blmcount <- blmcount + 1
     }
   }
@@ -41,7 +59,23 @@ for(i in unique(mayors$TwitterHandle)) {
   mayors$blmmentions[mayors$TwitterHandle == i] <- blmcount
 }
 
-#make the plot
+
+
+
+####  Let's run a diagnostic:
+
+sum(mayors$policementions)  # 12482 is great result
+sum(mayors$blmmentions)     # 50 is much less than we expected. Maybe mayors refrain from using #blm.
+
+
+
+
+
+####  Let's prepare the plots:
+
+
+
+
 police.data <- mayors[mayors$policementions !=0, ]
 police.data <- police.data[order (police.data$policementions, decreasing = TRUE), ]
 blm.data <- mayors[mayors$blmmentions !=0, ]
