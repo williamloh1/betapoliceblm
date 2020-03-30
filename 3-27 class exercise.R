@@ -10,6 +10,7 @@ SimpleModelTrain<-lm(VotePercentage~pvi*Republican+Incumbent, data=senate_train)
 SimpleModelPredictions<-predict(SimpleModelTrain, newdata=senate_test)
 sqrt(mean((SimpleModelPredictions-senate_train$VotePercentage)^2))
 #the complex model
-ComplexModelTrain <- lm(VotePercentage~pvi*Democrat+weightexperience+GenericBallotSept+Incumbent, data=senate_train)
+ComplexModelTrain <- lm(VotePercentage~pvi+weightexperience+GenericBallotSept+Incumbent+PercentageRaised, data=senate_train)
 ComplexModelPredictions<-predict(ComplexModelTrain, newdata=senate_test)
 sqrt(mean((ComplexModelPredictions-senate_train$VotePercentage)^2))
+
