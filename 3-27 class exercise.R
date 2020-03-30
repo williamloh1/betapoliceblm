@@ -22,7 +22,7 @@ ComplexModelPredictions<-predict(ComplexModelTrain, newdata=senate_test)
 sqrt(mean((ComplexModelPredictions-senate_test$VotePercentage)^2))
 #predict 2018 candidates
 vote <- predict(ComplexModelTrain, 
-        newdata=candidates2018[which(candidates2018$Candidateidentifier %in% c("2018MOMcCaskill", "2018OHBrown", "2018WVManchin")), ])
+        newdata=candidates2018[which(candidates2018$Candidateidentifier %in% c("2018OHBrown", "2018MOMcCaskill", "2018WVManchin")), ])
 vote <- as.data.frame(vote)
 rownames(vote)[1] <- "2018OHBrown"
 rownames(vote)[2] <- "2018MOMcCaskill"
