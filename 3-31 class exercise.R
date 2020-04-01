@@ -47,7 +47,8 @@ brier<- sqrt(mean((turnout$turnout-treePreds)^2))
 
 
 #per slide 41
-
+install.packages("randomForest")
+library(randomForest)
 
 #per slide 45 (group assignment)
 
