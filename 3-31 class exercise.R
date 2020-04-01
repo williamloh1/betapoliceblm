@@ -31,13 +31,16 @@ library(rpart)
 equation<-as.formula("turnout~eth+inc+age")
 tree_mod1<-rpart(equation, data=turnout)
 tree_mod2<-rpart(equation, data=turnout, control=rpart.control(cp=.0002))
+#confusion matrix for tree_mod1
 treePreds1<-predict(tree_mod1)
-treePreds2<-predict(tree_mod2) 
 table(treePreds1, turnout$turnout)
+#confusion matrix for tree_mod2
+treePreds2<-predict(tree_mod2) 
 table(treePreds2, turnout$turnout)
+#brier score
 brier1 <- sqrt(mean((turnout$turnout-treePreds1)^2))
 brier2 <- sqrt(mean((turnout$turnout-treePreds2)^2))
-#our own tree model with different cp
+#build our own tree model with different cp
 our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.005))
 #confusion matrix
 treePreds<-predict(our_tree_mod)
