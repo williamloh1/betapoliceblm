@@ -61,7 +61,7 @@ our_mod_forest<-randomForest(turnout~stt+eth+inc+age, data=turnout,
 our_mod_forest$confusion
 
 #per slide 45 (group assignment)
-
+senateData<-read.csv("http://politicaldatascience.com/PDS/Datasets/SenateForecast/CandidateLevel.csv")
 
 
 
