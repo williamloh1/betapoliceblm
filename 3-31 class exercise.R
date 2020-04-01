@@ -1,4 +1,5 @@
 #class exercise 3-31
+#per slide 10
 #when income=2, age=4
 lambda1 <- -2+1*2+0.7*4
 logit1 <- exp(lambda1)/(1+exp(lambda1))
@@ -12,3 +13,34 @@ table=as.data.frame(cbind(c(lambda1, logit1), c(lambda2, logit2)))
 rownames(table)[1] <- c("lambda")
 rownames(table)[2] <- c("probability")
 table
+
+#per slide 17
+turnout<-read.csv("http://politicaldatascience.com/PDS/Datasets/SimpleTurnout2008.csv")
+model <- glm(turnout~stt+eth+inc+age, family="binomial", data=turnout)
+summary(model)
+Modelpreds<-predict(model, type="response")
+boxplot(Modelpreds~turnout$inc, xlab="Income", ylab="Predicted Probabilities")
+
+#per slide 23
+confusion.matrix <- matrix(c(4283, 18523, 3809, 46418), nrow=2)
+precision <- 46418/(18523+46418)
+recall <- 46418/(46418+3809)
+accuracy <- (46418+4283)/(4283+18523+3809+46418)
+
+#per slide 35
+library(rpart)
+equation<-as.formula("turnout~eth+inc+age")
+tree_mod1<-rpart(equation, data=turnout)
+tree_mod2<-rpart(equation, data=turnout, control=rpart.control(cp=.0002))
+treePreds1<-predict(tree_mod1)
+treePreds2<-predict(tree_mod2) 
+table(treePreds1, turnout$turnout)
+table(treePreds2, turnout$turnout)
+brier1 <- sqrt(mean((turnout$turnout-treePreds1)^2))
+brier2 <- sqrt(mean((turnout$turnout-treePreds2)^2))
+
+our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.0001))
+
+
+
+#per slide 41
