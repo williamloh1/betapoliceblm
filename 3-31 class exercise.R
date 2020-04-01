@@ -93,3 +93,71 @@ for (i in seq_along(senateData$election)) {
 }
 
 
+
+
+
+
+
+
+
+
+########  Grtting Ready
+####
+
+rm(list = ls())
+senateData<-read.csv("http://politicaldatascience.com/PDS/Datasets/SenateForecast/CandidateLevel.csv")
+library(tidyverse)
+
+senate.summary <- senateData %>%
+  group_by(RaceID) %>%
+  mutate(winning = min_rank(desc(VotePercentage))) %>%
+  filter(Incumbent == 1) %>%
+  mutate(win = as.numeric(winning ==1))
+sum(senate.summary$win)
+
+senate.summary <- senate.summary %>%
+  mutate(pvi.rep = pvi * Republican)
+
+
+
+########  Subsetting Training-Test Datasets
+####
+
+senate.summary.test <- senate.summary[senate.summary$year==2016, ] 
+senate.summary.training <- senate.summary[senate.summary$year!=2016, ] 
+
+
+
+########  Model 1: Linear
+####
+
+model.1 <- glm(win ~ pvi * Republican + weightexperience + PercentageRaised, family="binomial", data=senate.summary.training)
+model.1.preds <-predict(model.1, type="response", newdata = senate.summary.test)
+
+#---  Confusion matrix for each model for 2016:
+table((model.1.preds > 0.5)*1, senate.summary.test$win) 
+
+
+
+########  Model 2: KNN
+####
+
+library(class)
+
+trainingX<-senate.summary.training[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
+turnoutX$win<-turnoutX$inc+rnorm(length(turnoutX$inc), 0, .001)
+mod1_knn<-knn(turnoutX, test=turnoutX, cl=turnout$turnout, k=10)
+model.2 <- knn(win ~ pvi * Republican + weightexperience + PercentageRaised, k=10)
+
+#---  Confusion matrix for each model for 2016:
+
+
+
+########  Model 3: Random Forest
+####
+
+
+#---  Confusion matrix for each model for 2016:
+
+
+
