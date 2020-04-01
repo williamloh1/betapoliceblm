@@ -49,6 +49,10 @@ brier<- sqrt(mean((turnout$turnout-treePreds)^2))
 #per slide 41
 install.packages("randomForest")
 library(randomForest)
+turnout$turnout<-as.factor(turnout$turnout)
+our_mod_forest<-randomForest(turnout~stt+eth+inc+age, data=turnout, 
+                          ntree=101, mtry=3, maxnodes=4)
+our_mod_forest$confusion
 
 #per slide 45 (group assignment)
 
