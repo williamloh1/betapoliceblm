@@ -17,6 +17,7 @@ turnout<-read.csv("http://politicaldatascience.com/PDS/Datasets/SimpleTurnout200
 model <- glm(turnout~stt+eth+inc+age, family="binomial", data=turnout)
 summary(model)
 Modelpreds<-predict(model, type="response")
+table((Modelpreds>0.5)*1, turnout$turnout)
 boxplot(Modelpreds~turnout$inc, xlab="Income", ylab="Predicted Probabilities")
 
 #per slide 23
@@ -33,21 +34,23 @@ tree_mod1<-rpart(equation, data=turnout)
 tree_mod2<-rpart(equation, data=turnout, control=rpart.control(cp=.0002))
 #confusion matrix for tree_mod1
 treePreds1<-predict(tree_mod1)
-table(treePreds1, turnout$turnout)
+table((treePreds1>0.5)*1, turnout$turnout)
 #confusion matrix for tree_mod2
 treePreds2<-predict(tree_mod2) 
-table(treePreds2, turnout$turnout)
+table((treePreds2>0.5)*1, turnout$turnout)
 #brier score
 brier1 <- sqrt(mean((turnout$turnout-treePreds1)^2))
 brier2 <- sqrt(mean((turnout$turnout-treePreds2)^2))
+brier1
+brier2
 #build our own tree model with different cp
 our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.005))
 #confusion matrix
 treePreds<-predict(our_tree_mod)
-table(treePreds, turnout$turnout)
+table((treePreds>0.5)*1, turnout$turnout)
 #brier score
 brier<- sqrt(mean((turnout$turnout-treePreds)^2))
-
+brier
 
 #per slide 41
 install.packages("randomForest")
