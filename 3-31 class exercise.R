@@ -36,9 +36,18 @@ table(treePreds1, turnout$turnout)
 table(treePreds2, turnout$turnout)
 brier1 <- sqrt(mean((turnout$turnout-treePreds1)^2))
 brier2 <- sqrt(mean((turnout$turnout-treePreds2)^2))
-#our own tree model
+#our own tree model with different cp
 our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.0001))
+#confusion matrix
 
-
+#brier score
 
 #per slide 41
+
+
+#per slide 45 (group assignment)
+
+
+
+
+
