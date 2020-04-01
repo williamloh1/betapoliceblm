@@ -26,6 +26,7 @@ recall <- 46418/(46418+3809)
 accuracy <- (46418+4283)/(4283+18523+3809+46418)
 
 #per slide 35
+install.packages("rpart")
 library(rpart)
 equation<-as.formula("turnout~eth+inc+age")
 tree_mod1<-rpart(equation, data=turnout)
@@ -37,10 +38,13 @@ table(treePreds2, turnout$turnout)
 brier1 <- sqrt(mean((turnout$turnout-treePreds1)^2))
 brier2 <- sqrt(mean((turnout$turnout-treePreds2)^2))
 #our own tree model with different cp
-our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.0001))
+our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.005))
 #confusion matrix
-
+treePreds<-predict(our_tree_mod)
+table(treePreds, turnout$turnout)
 #brier score
+brier<- sqrt(mean((turnout$turnout-treePreds)^2))
+
 
 #per slide 41
 
