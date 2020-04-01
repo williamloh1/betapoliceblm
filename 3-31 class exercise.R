@@ -25,28 +25,36 @@ confusion.matrix <- matrix(c(4283, 18523, 3809, 46418), nrow=2)
 precision <- 46418/(18523+46418)
 recall <- 46418/(46418+3809)
 accuracy <- (46418+4283)/(4283+18523+3809+46418)
-
+precision
+recall
+accuracy
 #per slide 35
 library(rpart)
 equation<-as.formula("turnout~eth+inc+age")
 tree_mod1<-rpart(equation, data=turnout)
 tree_mod2<-rpart(equation, data=turnout, control=rpart.control(cp=.0002))
-#confusion matrix for tree_mod1
+#confusion matrix for tree_mod1 and accuracy
 treePreds1<-predict(tree_mod1)
 table((treePreds1>0.5)*1, turnout$turnout)
+accuracy.tree1 <- (5886+44582)/(5886+5645+16920+44582)
+accuracy.tree1
 #confusion matrix for tree_mod2
 treePreds2<-predict(tree_mod2) 
 table((treePreds2>0.5)*1, turnout$turnout)
+accuracy.tree2 <- (3158+47973)/(3158+2254+19648+47973)
+accuracy.tree2
 #brier score
 brier1 <- sqrt(mean((turnout$turnout-treePreds1)^2))
 brier2 <- sqrt(mean((turnout$turnout-treePreds2)^2))
 brier1
 brier2
 #build our own tree model with different cp
-our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.005))
+our_tree_mod <- rpart(turnout~eth+inc+age, data=turnout, control=rpart.control(cp=.00003))
 #confusion matrix
 treePreds<-predict(our_tree_mod)
 table((treePreds>0.5)*1, turnout$turnout)
+accuracy.tree <- (4686+46491)/(4686+3736+18120+46491)
+accuracy.tree
 #brier score
 brier<- sqrt(mean((turnout$turnout-treePreds)^2))
 brier
