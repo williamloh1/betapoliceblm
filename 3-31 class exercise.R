@@ -99,6 +99,7 @@ table((model.1.preds > 0.5)*1, senate.summary.test$win)
 
 ########  Model 2: Random Forest
 ####
+library(randomForest)
 senate.summary.training$win<-as.factor(senate.summary.training$win)
 model.2<-randomForest(win ~ pvi * Republican + weightexperience + PercentageRaised, data=senate.summary.training, 
                              ntree=201, mtry=3, maxnodes=4)
@@ -113,7 +114,7 @@ table((model.2.preds > 0.5)*1, senate.summary.test$win)
 library(class)
 X.train<-senate.summary.training[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
 X.test <- senate.summary.test[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
-senate.summary.training$win<-senate.summary.training$win+rnorm(length(senate.summary.test$win), 0, .001)
+senate.summary.training$win<-as.numeric(senate.summary.training$win)+rnorm(length(senate.summary.test$win), 0, .001)
 model.3<-knn(train=X.train, test=X.test, cl=senate.summary.training$win, k=10)
 #Confusion matrix for KNN model for 2016:
 table((as.numeric(model.3)>0.5)*1, senate.summary.test$win)
