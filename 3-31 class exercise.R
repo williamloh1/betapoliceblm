@@ -62,7 +62,34 @@ our_mod_forest$confusion
 
 #per slide 45 (group assignment)
 senateData<-read.csv("http://politicaldatascience.com/PDS/Datasets/SenateForecast/CandidateLevel.csv")
-
-
+election <- rep(0,nrow(senateData))
+incumbent_win <- rep(0,nrow(senateData))
+senateData <- cbind(senateData,election,incumbent_win)
+for (i in seq_along(senateData$election)) {
+  senateData$election[i] = paste(senateData$cycle[i],senateData$state[i],sep="")
+}
+senateData <- senateData[order(senateData$election),]
+for (i in seq_along(senateData$election)) {
+  temp <- c(i)
+  for (j in i:nrow(senateData)) {
+    if (senateData$election[i] == senateData$election[j]) {
+      temp <- c(temp,j)
+    }
+  }
+  val <- 0
+  save <- 0
+  for (x in temp) {
+    if (senateData$election[x] > val) {
+      val <- senateData$election[x]
+      save <- x
+    }
+  }
+  senateData$incumbent_win[save] <- 1
+  for (x in temp) {
+    if (x != save) {
+      senateData <- senateData[-x,]
+    }
+  }
+}
 
 
