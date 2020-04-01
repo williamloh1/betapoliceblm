@@ -27,7 +27,6 @@ recall <- 46418/(46418+3809)
 accuracy <- (46418+4283)/(4283+18523+3809+46418)
 
 #per slide 35
-install.packages("rpart")
 library(rpart)
 equation<-as.formula("turnout~eth+inc+age")
 tree_mod1<-rpart(equation, data=turnout)
@@ -53,7 +52,6 @@ brier<- sqrt(mean((turnout$turnout-treePreds)^2))
 brier
 
 #per slide 41
-install.packages("randomForest")
 library(randomForest)
 turnout$turnout<-as.factor(turnout$turnout)
 our_mod_forest<-randomForest(turnout~stt+eth+inc+age, data=turnout, 
@@ -61,45 +59,6 @@ our_mod_forest<-randomForest(turnout~stt+eth+inc+age, data=turnout,
 our_mod_forest$confusion
 
 #per slide 45 (group assignment)
-senateData<-read.csv("http://politicaldatascience.com/PDS/Datasets/SenateForecast/CandidateLevel.csv")
-election <- rep(0,nrow(senateData))
-incumbent_win <- rep(0,nrow(senateData))
-senateData <- cbind(senateData,election,incumbent_win)
-for (i in seq_along(senateData$election)) {
-  senateData$election[i] = paste(senateData$cycle[i],senateData$state[i],sep="")
-}
-senateData <- senateData[order(senateData$election),]
-for (i in seq_along(senateData$election)) {
-  temp <- c(i)
-  for (j in i:nrow(senateData)) {
-    if (senateData$election[i] == senateData$election[j]) {
-      temp <- c(temp,j)
-    }
-  }
-  val <- 0
-  save <- 0
-  for (x in temp) {
-    if (senateData$election[x] > val) {
-      val <- senateData$election[x]
-      save <- x
-    }
-  }
-  senateData$incumbent_win[save] <- 1
-  for (x in temp) {
-    if (x != save) {
-      senateData <- senateData[-x,]
-    }
-  }
-}
-
-
-
-
-
-
-
-
-
 
 ########  Grtting Ready
 ####
@@ -113,7 +72,7 @@ senate.summary <- senateData %>%
   mutate(winning = min_rank(desc(VotePercentage))) %>%
   filter(Incumbent == 1) %>%
   mutate(win = as.numeric(winning ==1))
-sum(senate.summary$win)
+
 
 senate.summary <- senate.summary %>%
   mutate(pvi.rep = pvi * Republican)
@@ -132,32 +91,33 @@ senate.summary.training <- senate.summary[senate.summary$year!=2016, ]
 ####
 
 model.1 <- glm(win ~ pvi * Republican + weightexperience + PercentageRaised, family="binomial", data=senate.summary.training)
+
 model.1.preds <-predict(model.1, type="response", newdata = senate.summary.test)
-
-#---  Confusion matrix for each model for 2016:
 table((model.1.preds > 0.5)*1, senate.summary.test$win) 
+#Confusion matrix for linear model for 2016:
 
 
+########  Model 2: Random Forest
+####
+senate.summary.training$win<-as.factor(senate.summary.training$win)
+model.2<-randomForest(win ~ pvi * Republican + weightexperience + PercentageRaised, data=senate.summary.training, 
+                             ntree=201, mtry=3, maxnodes=4)
 
-########  Model 2: KNN
+#Confusion matrix for Random Forest model for 2016:
+model.2.preds <- as.numeric(predict(model.2, newdata=senate.summary.test))
+table((model.2.preds > 0.5)*1, senate.summary.test$win) 
+
+########  Model 3: KNN
 ####
 
 library(class)
+X.train<-senate.summary.training[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
+X.test <- senate.summary.test[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
+senate.summary.training$win<-senate.summary.training$win+rnorm(length(senate.summary.test$win), 0, .001)
+model.3<-knn(train=X.train, test=X.test, cl=senate.summary.training$win, k=10)
+#Confusion matrix for KNN model for 2016:
+table((as.numeric(model.3)>0.5)*1, senate.summary.test$win)
 
-trainingX<-senate.summary.training[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
-turnoutX$win<-turnoutX$inc+rnorm(length(turnoutX$inc), 0, .001)
-mod1_knn<-knn(turnoutX, test=turnoutX, cl=turnout$turnout, k=10)
-model.2 <- knn(win ~ pvi * Republican + weightexperience + PercentageRaised, k=10)
-
-#---  Confusion matrix for each model for 2016:
-
-
-
-########  Model 3: Random Forest
-####
-
-
-#---  Confusion matrix for each model for 2016:
 
 
 
