@@ -122,7 +122,6 @@ table((model.2.preds > 0.5)*1, senate.summary.test$win)
 library(class)
 X.train<-senate.summary.training[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
 X.test <- senate.summary.test[,c("pvi", "Republican", "pvi.rep", "weightexperience", "PercentageRaised")]
-senate.summary.training$win<-as.numeric(senate.summary.training$win)+rnorm(length(senate.summary.test$win), 0, .01)
 model.3<-knn(train=X.train, test=X.test, cl=senate.summary.training$win, k=10)
 #Confusion matrix for KNN model for 2016:
 table((as.numeric(model.3)>0.5)*1, senate.summary.test$win)
