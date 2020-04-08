@@ -1,0 +1,15 @@
+df<- read.csv("https://jmontgomery.github.io/ProblemSets/longo.csv")
+df2008 <- subset(df,df$Sample2009=="0")
+df2008ZA <- subset(df2008,df2008$ZA=="1")
+df2008WN <- subset(df2008,df2008$ZA=="0")
+df2009 <- subset(df,df$Sample2009=="1")
+df2009ZA <- subset(df2009,df2009$ZA=="1")
+df2009WN <- subset(df2009,df2009$ZA=="0")
+mil2008ZA <- mean(df2008ZA$militancy,na.rm=T)
+mil2008WN <- mean(df2008WN$militancy,na.rm=T)
+mil2009ZA <- mean(df2009ZA$militancy,na.rm=T)
+mil2009WN <- mean(df2009WN$militancy,na.rm=T)
+diff <- c("Mil2008ZA"=mil2008ZA,"Mil2008WN"=mil2008WN,"Mil2009ZA"=mil2009ZA,"Mil2009WN"=mil2009WN)
+diff 
+diffindiff <- mil2009ZA-((mil2009WN-mil2008WN)+mil2008ZA)
+diffindiff
