@@ -7,6 +7,19 @@ low.race.coef <- 0.032033-qt(0.975, 4868)*0.007785
 high.race.coef <- 0.032033+qt(0.975, 4868)*0.007785
 paste("The 95% CI for the race treatment is between", low.race.coef, "and", high.race.coef)
 
+bootstrapped.reserved <- list()
+for (i in 1:1000){
+  resume.sample <- resume[sample (1:nrow(resume), nrow(resume), replace=T),]
+  bootstrapped.reserved[[i]] <- coef(lm (call~race, data=resume.sample))[2]
+}
+mean(unlist(bootstrapped.reserved))
+sd(unlist(bootstrapped.reserved))
+low.boot.reserved.coef <- mean(unlist(bootstrapped.reserved))-qt(0.975, 1000)*sd(unlist(bootstrapped.reserved))
+high.boot.reserved.coef <-mean(unlist(bootstrapped.reserved))+qt(0.975, 1000)*sd(unlist(bootstrapped.reserved))
+paste("The 95% CI for the bootstrapped race treatment is between", low.boot.reserved.coef, "and", high.boot.reserved.coef)
+
+
+
 #Group assignment
 women <- read.csv("https://raw.githubusercontent.com/kosukeimai/qss/master/PREDICTION/women.csv")
 model <- lm(water~reserved, data=women)
@@ -24,8 +37,8 @@ for (i in 1:1000){
 }
 mean(unlist(bootstrapped.reserved))
 sd(unlist(bootstrapped.reserved))
-low.boot.reserved.coef <- mean(unlist(bootstrapped.reserved))-qt(0.975, 320)*sd(unlist(bootstrapped.reserved))
-high.boot.reserved.coef <-mean(unlist(bootstrapped.reserved))+qt(0.975, 320)*sd(unlist(bootstrapped.reserved))
+low.boot.reserved.coef <- mean(unlist(bootstrapped.reserved))-qt(0.975, 1000)*sd(unlist(bootstrapped.reserved))
+high.boot.reserved.coef <-mean(unlist(bootstrapped.reserved))+qt(0.975, 1000)*sd(unlist(bootstrapped.reserved))
 paste("The 95% CI for the bootstrapeed reserved treatment is between", low.boot.reserved.coef, "and", high.boot.reserved.coef)
 
 
@@ -48,7 +61,7 @@ for (i in 1:1000){
 }
 mean(unlist(bootstrapped.reserved.2))
 sd(unlist(bootstrapped.reserved.2))
-low.boot.reserved.coef.2 <- mean(unlist(bootstrapped.reserved.2))-qt(0.975, 320)*sd(unlist(bootstrapped.reserved.2))
-high.boot.reserved.coef.2 <-mean(unlist(bootstrapped.reserved.2))+qt(0.975, 320)*sd(unlist(bootstrapped.reserved.2))
+low.boot.reserved.coef.2 <- mean(unlist(bootstrapped.reserved.2))-qt(0.975, 1000)*sd(unlist(bootstrapped.reserved.2))
+high.boot.reserved.coef.2 <-mean(unlist(bootstrapped.reserved.2))+qt(0.975, 1000)*sd(unlist(bootstrapped.reserved.2))
 paste("The 95% CI for the bootstrapeed reserved treatment is between", low.boot.reserved.coef.2, "and", high.boot.reserved.coef.2)
 
