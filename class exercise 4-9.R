@@ -1,7 +1,7 @@
 #Per slide 11
 congress <- read.csv("https://jmontgomery.github.io/ProblemSets/incumbents.csv")
-lm(voteshare~incspend, data=congress)
-lm(voteshare~incspend+chalspend+presvote+chalquality, data=congress)
+summary(lm(voteshare~incspend, data=congress))
+summary(lm(voteshare~incspend+chalspend+presvote+chalquality, data=congress))
 library(tidyverse)
 congress %>% group_by(incspend>mean(incspend, na.rm=T)) %>%
   summarize(Chalspend = mean(chalspend, na.rm=TRUE), 
@@ -20,7 +20,6 @@ AR <- Fatalities[Fatalities$state=="ar", ]
 lm(fatal_rate ~ beertax, data=AL)$coefficients
 lm(fatal_rate ~ beertax, data=AZ)$coefficients
 lm(fatal_rate ~ beertax, data=AR)$coefficients
-
 
 
 #group assignment
