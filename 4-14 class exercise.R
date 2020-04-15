@@ -53,3 +53,31 @@ ggplot(data=data, mapping=aes(x=State, y=word.fundraising))+ geom_boxplot()+coor
 ggplot(data=data, mapping=aes(x=State, y=word.immigration))+ geom_boxplot()+coord_flip()
 
 
+#group assignment
+gs_url1<-"https://scholar.google.com/scholar?hl=en&as_sdt=7,26&q=political+parties&btnG="
+pg1<-gs_url1%>%
+  read_html()%>%
+  html_nodes(".gs_or_cit+ a , .gs_a , .gs_rt") %>% 
+  html_text()
+pg1 <- list(pg1)
+
+gs_page1<-read_html(gs_url1)
+pageLinks<-gs_page1 %>%
+  html_nodes('#gs_n a') %>%
+  html_attr('href')
+pageLinks
+
+results <- c()
+for (i in c(1:9)){
+  thisUrl<-paste0("https://scholar.google.com/", pageLinks[i])
+  results[[i]]<-read_html(thisUrl) %>%
+    html_nodes('.gs_or_cit+ a , .gs_a , .gs_rt') %>%
+    html_text()
+}
+
+results <- c(pg1, results)
+df <- data.frame(matrix(unlist(results), nrow = 100, ncol=3, byrow = T))
+library(readr)
+citations <- as.character(df[,3])
+citations.log <- log(parse_number(citations))
+
