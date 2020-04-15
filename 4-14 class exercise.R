@@ -80,4 +80,7 @@ df <- data.frame(matrix(unlist(results), nrow = 100, ncol=3, byrow = T))
 library(readr)
 citations <- as.character(df[,3])
 citations.log <- log(parse_number(citations))
-
+df$log.citation <- citations.log
+colnames(df) <- c("Result", "Author", "Citation", "Log.Citation")
+ggplot(data=df, mapping=aes(x=Result, y=Log.Citation))+
+  geom_boxplot()+coord_flip()
