@@ -1,7 +1,7 @@
 #Per slide 11
 congress <- read.csv("https://jmontgomery.github.io/ProblemSets/incumbents.csv")
-lm(voteshare~incspend, data=congress)
-lm(voteshare~incspend+chalspend+presvote+chalquality, data=congress)
+summary(lm(voteshare~incspend, data=congress))
+summary(lm(voteshare~incspend+chalspend+presvote+chalquality, data=congress))
 library(tidyverse)
 congress %>% group_by(incspend>mean(incspend, na.rm=T)) %>%
   summarize(Chalspend = mean(chalspend, na.rm=TRUE), 
@@ -22,6 +22,7 @@ lm(fatal_rate ~ beertax, data=AZ)$coefficients
 lm(fatal_rate ~ beertax, data=AR)$coefficients
 
 
+<<<<<<< HEAD
 ########  Put into slack what you think explains the flip in sign. 
 ####        (You don't need to put up the lines, but drawing them may help you think about it.)
 
@@ -37,6 +38,8 @@ head(model2$coefficients)
 #---    average health comparison. Beer tax is likely to be assigned states
 #---    with much more drinking habit.
 
+=======
+>>>>>>> e40d4e6fee96c6536c92f9554b34f1a51c8831b5
 #group assignment
 palestinians<- read.csv("https://jmontgomery.github.io/ProblemSets/longo.csv")
 my.model <- lm(militancy~ZA+Sample2009+Sample2009*ZA, data = palestinians)
