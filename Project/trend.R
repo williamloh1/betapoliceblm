@@ -30,13 +30,12 @@ my.fun <- function(vector.keyword = NA,  state.abbr = "US"){
           gprop = c("web"),
           category = 0, hl = "en-US", low_search_volume = FALSE,
           cookie_url = "http://trends.google.com/Cookies/NID", tz = 0,
-          onlyInterest = FALSE)
+          onlyInterest = T)
 }
 
 
 #---  Example:
 my.fun(vector.keyword = c("gun", "firearms"), state.abbr = "CA")
-
 
 #---  For all states:
 list.gun.firearms <- list(NULL)
