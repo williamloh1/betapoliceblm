@@ -11,7 +11,7 @@
 rm(list = ls())
 
 #---  Installing the package
-install.packages("gtrendsR")
+##install.packages("gtrendsR")
 library(gtrendsR)
 
 #---  Categories dataset composed of exisiting research categories (not vital)
@@ -24,23 +24,45 @@ state.df <- as.data.frame(cbind(state.x77, state.abb, state.area, state.division
 rm(list=setdiff(ls(), c("state.df", "categories")))
 
 
-#---  Creating a function that takes as the first argument as a vector of keywords and second argument as state abbreviation:
-my.fun <- function(vector.keyword = NA,  state.abbr = "US"){
-  gtrends(keyword = c("firearms", "gun"), geo = as.character(state.abbr), time = "today 3-m",
+#---  Creating a function that takes three arguments
+#---    1)  a string vector of keywords     (default: covid19)
+#---    2)  a state abbreviation            (default: whole US)
+#---    2)  a boolean of percentage change  (default: FALSE)
+
+
+
+my.fun <- function(vector.keyword = "covid19",  state.abbr = "US", change = FALSE){
+  library(gtrendsR)
+  library(tidyverse)
+  result <- gtrends(keyword = vector.keyword, geo = as.character(state.abbr), time = "2020-03-01 2020-04-15",
           gprop = c("web"),
           category = 0, hl = "en-US", low_search_volume = FALSE,
           cookie_url = "http://trends.google.com/Cookies/NID", tz = 0,
           onlyInterest = T)
+  result <- as.data.frame(result[1]) %>%
+    mutate(interest_over_time.hits.change = (interest_over_time.hits/lead(interest_over_time.hits) - 1) * 100)
+  if(change == FALSE){
+    ggplot(result, aes(x=interest_over_time.date, y=interest_over_time.hits)) +
+      geom_line( color="#69b3a2") + 
+      ylab("Hits") +
+      ggtitle(paste0("Search trend of ", vector.keyword, " over time")) +
+      xlab("") +
+      theme_light() +
+      theme(axis.text.x=element_text(angle=60, hjust=1)) 
+  } else {
+    ggplot(result, aes(x=interest_over_time.date, y=interest_over_time.hits.change)) +
+      geom_line( color="#69b3a2") + 
+      ylab("Hits") +
+      ggtitle(paste0("Search trend of ", vector.keyword, " over time")) +
+      xlab("") +
+      theme_light() +
+      theme(axis.text.x=element_text(angle=60, hjust=1))
+  } 
 }
 
 
-#---  Example:
-my.fun(vector.keyword = c("gun", "firearms"), state.abbr = "CA")
 
-#---  For all states:
-list.gun.firearms <- list(NULL)
-for(i in state.df$state.abb){
-  list.gun[[i]] <- my.fun(vector.keyword = c("gun", "firearms"), state.abbr = i)
-}
-
-
+my.fun(vector.keyword = "puzzle", state.abbr = "CA", F)
+my.fun(vector.keyword = "lockdown", state.abbr = "MO", F)
+my.fun(vector.keyword = "sourdough", state.abbr = "CA", F)
+my.fun(vector.keyword = "puzzle", state.abbr = "MO", F)
