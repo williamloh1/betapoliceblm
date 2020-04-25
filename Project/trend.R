@@ -41,28 +41,61 @@ my.fun <- function(vector.keyword = "covid19",  state.abbr = "US", change = FALS
           onlyInterest = T)
   result <- as.data.frame(result[1]) %>%
     mutate(interest_over_time.hits.change = (interest_over_time.hits/lead(interest_over_time.hits) - 1) * 100)
-  if(change == FALSE){
-    ggplot(result, aes(x=interest_over_time.date, y=interest_over_time.hits)) +
+  lockdown <- read.csv("~/Documents/GitHub/teambeta/Project/datasets/lockdown_dates.csv")
+  USlockdown <- lockdown[which(lockdown$Country=="United States"), ]
+  USlockdown$Place <- state.abb[match(USlockdown$Place, state.name)]
+  
+  if(change == FALSE){if(is.element(state.abbr, USlockdown$Place)==T){
+    statelock <- USlockdown[USlockdown$Place==state.abbr, ]
+    ggplot(result, aes(x=as.Date(interest_over_time.date), y=interest_over_time.hits)) +
+      geom_line( color="#69b3a2") + 
+      ylab("Hits") +
+      ggtitle(paste0("Search trend of ", vector.keyword, " over time")) +
+      xlab("") + 
+      ylim(0,100) +
+      theme_light() +
+      theme(axis.text.x=element_text(angle=60, hjust=1))+
+      geom_vline(xintercept = as.Date(statelock$Start.date))+
+      geom_text(aes(x=as.Date(statelock$Start.date), label="\nafter lockdown", y=mean(range(interest_over_time.hits))), size=4, colour="grey", angle=90) +
+      geom_text(aes(x=as.Date(statelock$Start.date), label="before lockdown\n", y=mean(range(interest_over_time.hits))), size=4, colour="grey", angle=90)
+  } else{ggplot(result, aes(x=as.Date(interest_over_time.date), y=interest_over_time.hits)) +
+      geom_line( color="#69b3a2") + 
+      ylab("Hits") +
+      ggtitle(paste0("Search trend of ", vector.keyword, " over time")) +
+      xlab("") + 
+      ylim(0,100) +
+      theme_light() +
+      theme(axis.text.x=element_text(angle=60, hjust=1))}
+  } else {if(is.element(state.abbr, USlockdown$Place)==T){
+    statelock <- USlockdown[USlockdown$Place==state.abbr, ]
+    ggplot(result, aes(x=as.Date(interest_over_time.date), y=interest_over_time.hits.change)) +
       geom_line( color="#69b3a2") + 
       ylab("Hits") +
       ggtitle(paste0("Search trend of ", vector.keyword, " over time")) +
       xlab("") +
       theme_light() +
-      theme(axis.text.x=element_text(angle=60, hjust=1)) 
-  } else {
-    ggplot(result, aes(x=interest_over_time.date, y=interest_over_time.hits.change)) +
+      theme(axis.text.x=element_text(angle=60, hjust=1))+
+      geom_vline(xintercept = as.Date(statelock$Start.date))+
+      geom_text(aes(x=as.Date(statelock$Start.date), label="\nafter lockdown", y=mean(range(interest_over_time.hits.change))), size=4, colour="grey", angle=90) +
+      geom_text(aes(x=as.Date(statelock$Start.date), label="before lockdown\n", y=mean(range(interest_over_time.hits.change))), size=4, colour="grey", angle=90)
+  } else{
+    ggplot(result, aes(x=as.Date(interest_over_time.date), y=interest_over_time.hits.change)) +
       geom_line( color="#69b3a2") + 
       ylab("Hits") +
       ggtitle(paste0("Search trend of ", vector.keyword, " over time")) +
       xlab("") +
       theme_light() +
       theme(axis.text.x=element_text(angle=60, hjust=1))
-  } 
+  }
+}
 }
 
-
-
-my.fun(vector.keyword = "puzzle", state.abbr = "CA", F)
-my.fun(vector.keyword = "lockdown", state.abbr = "MO", F)
+#test the function in a state has lockdown
 my.fun(vector.keyword = "sourdough", state.abbr = "CA", F)
-my.fun(vector.keyword = "puzzle", state.abbr = "MO", F)
+my.fun(vector.keyword = "sourdough", state.abbr = "CA", T)
+
+#test the function in a state never lockdown
+my.fun(vector.keyword = "puzzle", state.abbr = "AR", F)
+my.fun(vector.keyword = "puzzle", state.abbr = "AR", T)
+
+
