@@ -8,15 +8,13 @@ shinyUI(fluidPage( ## Flexible layout function
     ## outputs displayed in the main body
     sidebarPanel( #Things in this function specify the sidebar
       selectInput("dataset", "Choose a state:",
-                  choices = statecodes$state),
+                  choices = statecodes$state, inputId = "stateterm"),
       textInput(inputId = "searchterm", 
                 label = "Search Term:",
                 value=""
       )), ## End of sidebar
     mainPanel( ## Arguments for main section (output)
-      h3("This is what you said"), # A subtitle
-      # Notice the comma
-      textOutput("textDisplay")
+      plotOutput("searchGraph")
     ) # Close main panel
   ) #
 ))
