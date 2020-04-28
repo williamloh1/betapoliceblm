@@ -7,12 +7,16 @@ shinyUI(fluidPage( ## Flexible layout function
   sidebarLayout( ## Choosing layout with inputs on side and 
     ## outputs displayed in the main body
     sidebarPanel( #Things in this function specify the sidebar
-      selectInput("dataset", "Choose a state:",
+      selectInput(label = "State: ",
                   choices = statecodes$state, inputId = "stateterm"),
       textInput(inputId = "searchterm", 
                 label = "Search Term:",
                 value=""
-      )), ## End of sidebar
+      ), 
+      selectInput(label = "Type of query: ",
+                  choices = c("Hits per Day","Day-to-day change in hits"),
+                  inputId = "querytype")),
+      ## End of sidebar
     mainPanel( ## Arguments for main section (output)
       plotOutput("searchGraph")
     ) # Close main panel

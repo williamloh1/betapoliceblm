@@ -83,14 +83,6 @@ my.fun <- function(vector.keyword = "covid19",  state.abbr = "US", change = FALS
   }
 }
 
-#test the function in a state has lockdown
-my.fun(vector.keyword = "sourdough", state.abbr = "CA", F)
-my.fun(vector.keyword = "sourdough", state.abbr = "CA", T)
-
-#test the function in a state never lockdown
-my.fun(vector.keyword = "puzzle", state.abbr = "AR", F)
-my.fun(vector.keyword = "puzzle", state.abbr = "AR", T)
-
 
 
 
@@ -100,7 +92,11 @@ shinyServer(function(input, output) { ## Funciton defenition
   ## the output.
   output$searchGraph <- renderPlot({
     state.code <- statecodes$state_code[statecodes$state == input$stateterm]
-    graph.output <- my.fun(vector.keyword = input$searchterm, state.abbr = state.code, F)
+    bool <- T
+    if (input$querytype == "Hits per Day") {
+      bool <- F
+    }
+    graph.output <- my.fun(vector.keyword = input$searchterm, state.abbr = state.code, bool)
     print(graph.output)
   }) #Close renderPlot
 }) # Close function/shinyServer call
