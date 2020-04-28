@@ -1,6 +1,6 @@
 library(shiny) # call to shiny
 
-statecodes <- read.csv("~/Documents/GitHub/teambeta/Project/datasets/state codes.csv")
+statecodes <- read.csv("https://raw.githubusercontent.com/williamloh1/teambeta/master/Project/datasets/state%20codes.csv")
 
 ########  Package:  'gtrendsR'
 ####
