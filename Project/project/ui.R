@@ -1,6 +1,6 @@
 library(shiny)  ## Load shiny
 
-statecodes <- read.csv("~/Documents/GitHub/teambeta/Project/datasets/state codes.csv")
+statecodes <- read.csv("https://raw.githubusercontent.com/williamloh1/teambeta/master/Project/datasets/state%20codes.csv")
 
 shinyUI(fluidPage( ## Flexible layout function 
   titlePanel("COVID-19 Search Trends"), ## Setting the title

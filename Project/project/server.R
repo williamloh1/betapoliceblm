@@ -35,7 +35,7 @@ my.fun <- function(vector.keyword = "covid19",  state.abbr = "US", change = FALS
                     onlyInterest = T)
   result <- as.data.frame(result[1]) %>%
     mutate(interest_over_time.hits.change = interest_over_time.hits - lag(interest_over_time.hits))
-  lockdown <- read.csv("~/Documents/GitHub/teambeta/Project/datasets/lockdown_dates.csv")
+  lockdown <- read.csv("https://raw.githubusercontent.com/williamloh1/teambeta/master/Project/datasets/lockdown_dates.csv")
   USlockdown <- lockdown[which(lockdown$Country=="United States"), ]
   USlockdown$Place <- state.abb[match(USlockdown$Place, state.name)]
   
